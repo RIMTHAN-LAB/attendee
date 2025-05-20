@@ -9,6 +9,7 @@ services:
       - POSTGRES_HOST=postgres
       - REDIS_URL=redis://redis:6379/5
       - DJANGO_SETTINGS_MODULE=attendee.settings.development
+      - SECURE_PROXY_SSL_HEADER=HTTP_X_FORWARDED_PROTO,https
       - CSRF_TRUSTED_ORIGINS=https://attendee.rimthan.cloud
     command: ["/bin/bash", "-c", "/opt/bin/entrypoint.sh && celery -A attendee worker -l INFO"]
 
@@ -24,6 +25,7 @@ services:
       - POSTGRES_HOST=postgres
       - REDIS_URL=redis://redis:6379/5
       - DJANGO_SETTINGS_MODULE=attendee.settings.development
+      - SECURE_PROXY_SSL_HEADER=HTTP_X_FORWARDED_PROTO,https
       - CSRF_TRUSTED_ORIGINS=https://attendee.rimthan.cloud
     command: python manage.py runserver 0.0.0.0:8000
 
