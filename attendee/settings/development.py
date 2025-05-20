@@ -16,6 +16,8 @@ DATABASES = {
     }
 }
 
+CSRF_TRUSTED_ORIGINS = ["tendee-stripe-hooks.ngrok.io", "localhost", "attendee.rimthan.cloud"]
+
 # Log more stuff in development
 LOGGING = {
     "version": 1,
