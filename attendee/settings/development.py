@@ -5,6 +5,9 @@ from .base import *
 DEBUG = True
 ALLOWED_HOSTS = ["tendee-stripe-hooks.ngrok.io", "localhost", "attendee.rimthan.cloud"]
 
+SECURE_PROXY_SSL_HEADER = tuple(os.environ.get("SECURE_PROXY_SSL_HEADER", "").split(",", 1)) or None
+CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",")
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -16,7 +19,6 @@ DATABASES = {
     }
 }
 
-CSRF_TRUSTED_ORIGINS = ["tendee-stripe-hooks.ngrok.io", "localhost", "attendee.rimthan.cloud"]
 
 # Log more stuff in development
 LOGGING = {
