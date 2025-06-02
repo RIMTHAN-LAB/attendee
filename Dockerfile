@@ -5,6 +5,7 @@ SHELL ["/bin/bash", "-c"]
 ENV project=attendee
 ENV cwd=/$project
 
+
 ENV TZ=Europe/Warsaw
 
 RUN ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
