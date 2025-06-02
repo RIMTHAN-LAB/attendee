@@ -7,17 +7,11 @@ ENV cwd=/$project
 
 WORKDIR $cwd
 
-ARG DEBIAN_FRONTEND=noninteractive
-# 1️⃣  stay on HTTP, fetch ONLY the CA bundle
-RUN apt-get update \
- && apt-get install -y --no-install-recommends ca-certificates \
- && rm -rf /var/lib/apt/lists/*
-
-# 2️⃣  now it’s safe to convert the sources to HTTPS
-RUN sed -i -e 's|http://|https://|g' /etc/apt/sources.list \
- && for f in /etc/apt/sources.list.d/*.list; do \
-        [ -f "$f" ] && sed -i -e 's|http://|https://|g' "$f"; \
-    done
+# ---- BEFORE the first apt-get update ----
+RUN sed -i \
+    -e 's|http://archive.ubuntu.com/ubuntu|https://mirror.hetzner.com/ubuntu/packages|g' \
+    -e 's|http://security.ubuntu.com/ubuntu|https://mirror.hetzner.com/ubuntu/security|g' \
+    /etc/apt/sources.list
 #  Install Dependencies
 RUN apt-get update  \
     && apt-get install -y \
