@@ -7,11 +7,21 @@ ENV cwd=/$project
 
 WORKDIR $cwd
 
-# ---- BEFORE the first apt-get update ----
-RUN sed -i \
-    -e 's|http://archive.ubuntu.com/ubuntu|https://mirror.hetzner.com/ubuntu/packages|g' \
-    -e 's|http://security.ubuntu.com/ubuntu|https://mirror.hetzner.com/ubuntu/security|g' \
-    /etc/apt/sources.list
+# point every repo at the mirror, but keep plain-HTTP
+RUN sed -i -e 's|http://archive.ubuntu.com/ubuntu|http://mirror.hetzner.com/ubuntu/packages|g' \
+           -e 's|http://security.ubuntu.com/ubuntu|http://mirror.hetzner.com/ubuntu/security|g' \
+           /etc/apt/sources.list
+
+# now it’s safe to update & install
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+      build-essential ca-certificates cmake curl gdb git gfortran \
+      libopencv-dev libdbus-1-3 libgbm1 libgl1-mesa-glx libglib2.0-0 \
+      libglib2.0-dev libssl-dev libx11-dev libx11-xcb1 libxcb-image0 \
+      libxcb-keysyms1 libxcb-randr0 libxcb-shape0 libxcb-shm0 \
+      libxcb-xfixes0 libxcb-xtest0 libgl1-mesa-dri libxfixes3 \
+      linux-libc-dev pkgconf python3-pip tar unzip zip vim libpq-dev \
+ && rm -rf /var/lib/apt/lists/*
 #  Install Dependencies
 RUN apt-get update  \
     && apt-get install -y \
