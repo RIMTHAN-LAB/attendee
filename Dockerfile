@@ -48,6 +48,12 @@ RUN apt-get update  \
 
 # Install Chrome dependencies
 RUN sed -i 's|http://\(.*\).ubuntu.com|https://\1.ubuntu.com|g' /etc/apt/sources.list
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+      build-essential ca-certificates cmake curl gdb git gfortran \
+      libopencv-dev libdbus-1-3 libgbm1 libgl1-mesa-glx libglib2.0-0 \
+      libglib2.0-dev libssl-dev libx11-dev ... \
+ && rm -rf /var/lib/apt/lists/*
 RUN apt-get install -y xvfb x11-xkb-utils xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic x11-apps libvulkan1 fonts-liberation xdg-utils wget
 # Install a specific version of Chrome.
 RUN wget -q http://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_134.0.6998.88-1_amd64.deb
