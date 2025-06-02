@@ -4,8 +4,14 @@ SHELL ["/bin/bash", "-c"]
 
 ENV project=attendee
 ENV cwd=/$project
-ENV DEBIAN_FRONTEND=noninteractive
+
 ENV TZ=Europe/Warsaw
+
+RUN ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
+    echo $TZ > /etc/timezone && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata && \
+    dpkg-reconfigure -f noninteractive tzdata
 
 WORKDIR $cwd
 
