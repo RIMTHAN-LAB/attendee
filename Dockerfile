@@ -4,6 +4,8 @@ SHELL ["/bin/bash", "-c"]
 
 ENV project=attendee
 ENV cwd=/$project
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Europe/Warsaw
 
 WORKDIR $cwd
 
@@ -12,8 +14,12 @@ RUN sed -i -e 's|http://archive.ubuntu.com/ubuntu|http://mirror.hetzner.com/ubun
            -e 's|http://security.ubuntu.com/ubuntu|http://mirror.hetzner.com/ubuntu/security|g' \
            /etc/apt/sources.list
 # set front-end + choose a zone BEFORE tzdata is unpacked
-ARG   DEBIAN_FRONTEND=noninteractive
-ENV   TZ=Etc/UTC           # or Europe/Warsaw, America/New_York …
+
+
+RUN apt-get update && \
+    apt-get install -y tzdata && \
+    ln -fs /usr/share/zoneinfo/Europe/Warsaw /etc/localtime && \
+    dpkg-reconfigure --frontend noninteractive tzdata
 
 RUN ln -sf /usr/share/zoneinfo/$TZ /etc/localtime  \
  && echo $TZ >/etc/timezone                           \
