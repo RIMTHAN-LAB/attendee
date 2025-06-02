@@ -16,16 +16,11 @@ RUN sed -i -e 's|http://archive.ubuntu.com/ubuntu|http://mirror.hetzner.com/ubun
 # set front-end + choose a zone BEFORE tzdata is unpacked
 
 
-RUN apt-get update && \
-    apt-get install -y tzdata && \
-    ln -fs /usr/share/zoneinfo/Europe/Warsaw /etc/localtime && \
-    dpkg-reconfigure --frontend noninteractive tzdata
-
-RUN ln -sf /usr/share/zoneinfo/$TZ /etc/localtime  \
- && echo $TZ >/etc/timezone                           \
- && apt-get update                                    \
- && apt-get install -y --no-install-recommends tzdata \
- && dpkg-reconfigure -f noninteractive tzdata
+RUN ln -fs /usr/share/zoneinfo/Europe/Warsaw /etc/localtime && \
+    echo "Europe/Warsaw" > /etc/timezone && \
+    DEBIAN_FRONTEND=noninteractive apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata && \
+    dpkg-reconfigure -f noninteractive tzdata
 
 
 #  Install Dependencies
