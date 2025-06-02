@@ -8,13 +8,16 @@ ENV cwd=/$project
 WORKDIR $cwd
 
 ARG DEBIAN_FRONTEND=noninteractive
-RUN sed -i 's|http://\(.*\).ubuntu.com|https://\1.ubuntu.com|g' /etc/apt/sources.list
+# 1️⃣  stay on HTTP, fetch ONLY the CA bundle
 RUN apt-get update \
- && apt-get install -y --no-install-recommends \
-      build-essential ca-certificates cmake curl gdb git gfortran \
-      libopencv-dev libdbus-1-3 libgbm1 libgl1-mesa-glx libglib2.0-0 \
-      libglib2.0-dev libssl-dev libx11-dev ... \
+ && apt-get install -y --no-install-recommends ca-certificates \
  && rm -rf /var/lib/apt/lists/*
+
+# 2️⃣  now it’s safe to convert the sources to HTTPS
+RUN sed -i -e 's|http://|https://|g' /etc/apt/sources.list \
+ && for f in /etc/apt/sources.list.d/*.list; do \
+        [ -f "$f" ] && sed -i -e 's|http://|https://|g' "$f"; \
+    done
 #  Install Dependencies
 RUN apt-get update  \
     && apt-get install -y \
