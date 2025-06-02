@@ -78,7 +78,7 @@ Here are some code examples for processing webhooks in different languages.
 
 ### Python
 
-This is a simple flash server that runs on port 5005. It listens for webhook requests and verifies the signature.
+This is a simple flask server that runs on port 5005. It listens for webhook requests and verifies the signature.
 ```python
 import json
 import logging
@@ -99,7 +99,7 @@ def sign_payload(payload, secret):
     Sign a webhook payload using HMAC-SHA256. Returns a base64-encoded HMAC-SHA256 signature
     """
     # Convert the payload to a canonical JSON string
-    payload_json = json.dumps(payload, sort_keys=True, separators=(",", ":"))
+    payload_json = json.dumps(payload, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
 
     # Decode the secret
     secret_decoded = base64.b64decode(secret)
