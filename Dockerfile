@@ -11,6 +11,15 @@ WORKDIR $cwd
 RUN sed -i -e 's|http://archive.ubuntu.com/ubuntu|http://mirror.hetzner.com/ubuntu/packages|g' \
            -e 's|http://security.ubuntu.com/ubuntu|http://mirror.hetzner.com/ubuntu/security|g' \
            /etc/apt/sources.list
+# set front-end + choose a zone BEFORE tzdata is unpacked
+ARG   DEBIAN_FRONTEND=noninteractive
+ENV   TZ=Etc/UTC           # or Europe/Warsaw, America/New_York …
+
+RUN ln -sf /usr/share/zoneinfo/$TZ /etc/localtime  \
+ && echo $TZ >/etc/timezone                           \
+ && apt-get update                                    \
+ && apt-get install -y --no-install-recommends tzdata \
+ && dpkg-reconfigure -f noninteractive tzdata
 
 
 #  Install Dependencies
