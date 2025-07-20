@@ -23,6 +23,7 @@ services:
       - POSTGRES_HOST=postgres
       - REDIS_URL=redis://redis:6379/5
       - DJANGO_SETTINGS_MODULE=attendee.settings.development
+      - CSRF_TRUSTED_ORIGINS=https://attendee.rimthan.cloud
     command: ["/bin/bash", "-c", "/opt/bin/entrypoint.sh && python manage.py run_scheduler"]
 
   attendee-app-local:
